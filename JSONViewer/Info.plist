@@ -5,7 +5,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>dev.akexorcist.jsonviewer</string>
 	<key>CFBundleName</key>
-	<string>JSONViewer</string>
+	<string>JSON Viewer</string>
 	<key>CFBundleDisplayName</key>
 	<string>JSON Viewer</string>
 	<key>CFBundleVersion</key>
