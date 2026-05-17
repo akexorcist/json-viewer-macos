@@ -155,6 +155,27 @@ final class JSONViewerUITests: XCTestCase {
         XCTAssertTrue(raw.contains("\n"), "Expected formatted JSON to contain newlines")
     }
 
+    // Double-clicking a leaf key enters inline edit mode; the value label must remain
+    // visible (not pushed off-screen by an expanding TextField). Renaming and confirming
+    // with Return replaces the key in the tree.
+    func testDoubleClickKeyInlineEdit() {
+        setRawJson(#"{"username":"johndoe"}"#)
+        let keyLabel = app.staticTexts["username"]
+        XCTAssertTrue(keyLabel.waitForExistence(timeout: 3))
+
+        // Enter inline key-edit mode
+        keyLabel.doubleClick()
+
+        // Select-all and type the new key name, then confirm
+        app.typeKey("a", modifierFlags: .command)
+        app.typeText("newname")
+        app.typeKey(.return, modifierFlags: [])
+
+        // New key must appear and old key must be gone
+        XCTAssertTrue(app.staticTexts["newname"].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.staticTexts["username"].exists)
+    }
+
     // File > New resets the document; previously visible keys disappear.
     func testNewDocumentResetsState() {
         setRawJson(#"{"name":"Alice"}"#)

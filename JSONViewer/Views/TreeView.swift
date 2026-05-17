@@ -87,14 +87,20 @@ struct TreeNodeRow: View {
             // Key
             if !node.key.isEmpty {
                 if isEditingKey {
-                    TextField("", text: $editKeyText)
-                        .textFieldStyle(.plain)
+                    // Invisible Text drives layout width (no cell insets); TextField sits on top for input.
+                    Text(editKeyText.isEmpty ? " " : editKeyText)
                         .font(.system(size: 13, design: .monospaced))
-                        .foregroundColor(Color(hex: "9cdcfe"))
-                        .frame(minWidth: 40)
-                        .focused($keyFocused)
-                        .onSubmit { commitKeyEdit() }
-                        .onExitCommand { cancelKeyEdit() }
+                        .foregroundColor(.clear)
+                        .fixedSize(horizontal: true, vertical: false)
+                        .overlay(alignment: .leading) {
+                            TextField("", text: $editKeyText)
+                                .textFieldStyle(.plain)
+                                .font(.system(size: 13, design: .monospaced))
+                                .foregroundColor(Color(hex: "9cdcfe"))
+                                .focused($keyFocused)
+                                .onSubmit { commitKeyEdit() }
+                                .onExitCommand { cancelKeyEdit() }
+                        }
                 } else {
                     Text(node.key)
                         .font(.system(size: 13, design: .monospaced))
