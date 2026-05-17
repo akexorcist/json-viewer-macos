@@ -54,6 +54,7 @@ private struct FormHeader: View {
                     .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundColor(Color(hex: "9cdcfe"))
                     .lineLimit(1)
+                    .textSelection(.enabled)
             } else {
                 Text("Root")
                     .font(.system(size: 13, weight: .medium))
