@@ -73,6 +73,7 @@ private struct FormHeader: View {
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.small)
+                .accessibilityIdentifier("formHeaderAddChild")
             }
         }
         .padding(.horizontal, 12)

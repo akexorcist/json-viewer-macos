@@ -155,6 +155,31 @@ final class JSONViewerUITests: XCTestCase {
         XCTAssertTrue(raw.contains("\n"), "Expected formatted JSON to contain newlines")
     }
 
+    // Selecting an object node shows the form panel; clicking "+ Add" in the header
+    // appends a new child and expands the parent in the tree.
+    func testFormHeaderAddChildButton() {
+        setRawJson(#"{"obj":{"a":1}}"#)
+
+        // Select the object node to open the form panel
+        let expandBtn = app.buttons["expandBtn_obj"]
+        XCTAssertTrue(expandBtn.waitForExistence(timeout: 3))
+        app.staticTexts["obj"].click()
+
+        // The form header's "+ Add" button has label 'Add' but no identifier —
+        // .buttonStyle(.bordered) wraps a native NSButton on macOS that doesn't
+        // propagate the SwiftUI-set accessibilityIdentifier. The tree's add button
+        // also has label 'Add' but carries identifier 'addChildBtn_obj', so we
+        // distinguish them with a predicate on the absent identifier.
+        let addBtn = app.buttons
+            .matching(NSPredicate(format: "label == 'Add' AND identifier == ''"))
+            .firstMatch
+        XCTAssertTrue(addBtn.waitForExistence(timeout: 3))
+        addBtn.click()
+
+        // addChild auto-expands the parent in the tree, so "newKey" becomes visible there.
+        XCTAssertTrue(app.staticTexts["newKey"].waitForExistence(timeout: 3))
+    }
+
     // Double-clicking a leaf key enters inline edit mode; the value label must remain
     // visible (not pushed off-screen by an expanding TextField). Renaming and confirming
     // with Return replaces the key in the tree.
