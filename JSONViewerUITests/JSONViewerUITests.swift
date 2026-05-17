@@ -155,6 +155,85 @@ final class JSONViewerUITests: XCTestCase {
         XCTAssertTrue(raw.contains("\n"), "Expected formatted JSON to contain newlines")
     }
 
+    // Clicking the trash button on an object property row removes it from the form panel.
+    func testFormPanelDeleteObjectProperty() {
+        setRawJson(#"{"obj":{"keep":"yes","remove":"this"}}"#)
+
+        let expandBtn = app.buttons["expandBtn_obj"]
+        XCTAssertTrue(expandBtn.waitForExistence(timeout: 3))
+        app.staticTexts["obj"].click()
+
+        // macOS List (NSTableView) with multiple rows doesn't expose individual row static
+        // texts via accessibility — wait for the delete buttons instead, which use
+        // .buttonStyle(.plain) and reliably propagate their accessibilityIdentifier.
+        XCTAssertTrue(app.buttons["deleteBtn_remove"].waitForExistence(timeout: 3))
+
+        app.buttons["deleteBtn_remove"].click()
+
+        XCTAssertFalse(app.buttons["deleteBtn_remove"].exists)
+        XCTAssertTrue(app.buttons["deleteBtn_keep"].exists)
+    }
+
+    // Clicking the trash button on an array item row removes it from the form panel.
+    func testFormPanelDeleteArrayItem() {
+        setRawJson(#"{"arr":["user","admin"]}"#)
+
+        let expandBtn = app.buttons["expandBtn_arr"]
+        XCTAssertTrue(expandBtn.waitForExistence(timeout: 3))
+        app.staticTexts["arr"].click()
+
+        // For arrays, child.key is the index string: "0" → deleteBtn_0, "1" → deleteBtn_1.
+        // Wait for deleteBtn_1 to confirm the form panel is loaded with both rows.
+        XCTAssertTrue(app.buttons["deleteBtn_1"].waitForExistence(timeout: 3))
+
+        app.buttons["deleteBtn_1"].click()
+
+        XCTAssertFalse(app.buttons["deleteBtn_1"].exists)
+        XCTAssertTrue(app.buttons["deleteBtn_0"].exists)
+    }
+
+    // Double-clicking a value cell in the form panel opens an inline TextField for editing.
+    func testFormPanelEditObjectValue() {
+        setRawJson(#"{"obj":{"name":"Alice"}}"#)
+
+        let expandBtn = app.buttons["expandBtn_obj"]
+        XCTAssertTrue(expandBtn.waitForExistence(timeout: 3))
+        app.staticTexts["obj"].click()
+
+        XCTAssertTrue(app.staticTexts["\"Alice\""].waitForExistence(timeout: 2))
+        app.staticTexts["\"Alice\""].doubleClick()
+
+        let valueField = app.textFields["Value"]
+        XCTAssertTrue(valueField.waitForExistence(timeout: 2))
+        valueField.typeKey("a", modifierFlags: .command)
+        valueField.typeText("Bob")
+        valueField.typeKey(.return, modifierFlags: [])
+
+        XCTAssertTrue(app.staticTexts["\"Bob\""].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.staticTexts["\"Alice\""].exists)
+    }
+
+    // Double-clicking a key cell in the form panel opens an inline TextField for editing.
+    func testFormPanelEditObjectKey() {
+        setRawJson(#"{"obj":{"name":"Alice"}}"#)
+
+        let expandBtn = app.buttons["expandBtn_obj"]
+        XCTAssertTrue(expandBtn.waitForExistence(timeout: 3))
+        app.staticTexts["obj"].click()
+
+        XCTAssertTrue(app.staticTexts["name"].waitForExistence(timeout: 2))
+        app.staticTexts["name"].doubleClick()
+
+        let keyField = app.textFields["Key"]
+        XCTAssertTrue(keyField.waitForExistence(timeout: 2))
+        keyField.typeKey("a", modifierFlags: .command)
+        keyField.typeText("label")
+        keyField.typeKey(.return, modifierFlags: [])
+
+        XCTAssertTrue(app.staticTexts["label"].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.staticTexts["name"].exists)
+    }
+
     // Selecting an object node shows the form panel; clicking "+ Add" in the header
     // appends a new child and expands the parent in the tree.
     func testFormHeaderAddChildButton() {
@@ -165,13 +244,12 @@ final class JSONViewerUITests: XCTestCase {
         XCTAssertTrue(expandBtn.waitForExistence(timeout: 3))
         app.staticTexts["obj"].click()
 
-        // The form header's "+ Add" button has label 'Add' but no identifier —
-        // .buttonStyle(.bordered) wraps a native NSButton on macOS that doesn't
-        // propagate the SwiftUI-set accessibilityIdentifier. The tree's add button
-        // also has label 'Add' but carries identifier 'addChildBtn_obj', so we
-        // distinguish them with a predicate on the absent identifier.
+        // The form header's "+ Add" button has label 'Add'. The tree's add button
+        // also gets label 'Add' from the SF Symbol but carries identifier 'addChildBtn_obj',
+        // so exclude it by identifier. This works whether or not .buttonStyle(.bordered)
+        // propagates the SwiftUI accessibilityIdentifier to the native NSButton.
         let addBtn = app.buttons
-            .matching(NSPredicate(format: "label == 'Add' AND identifier == ''"))
+            .matching(NSPredicate(format: "label == 'Add' AND identifier != 'addChildBtn_obj'"))
             .firstMatch
         XCTAssertTrue(addBtn.waitForExistence(timeout: 3))
         addBtn.click()
