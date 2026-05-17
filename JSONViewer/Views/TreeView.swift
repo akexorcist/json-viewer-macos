@@ -255,7 +255,11 @@ struct TreeNodeRow: View {
                 Button {
                     viewModel.changeType(id: node.id, to: type)
                 } label: {
-                    Label(type.displayName, systemImage: type == node.type ? "checkmark" : "")
+                    if type == node.type {
+                        Label(type.displayName, systemImage: "checkmark")
+                    } else {
+                        Text(type.displayName)
+                    }
                 }
                 .disabled(type == node.type)
             }
