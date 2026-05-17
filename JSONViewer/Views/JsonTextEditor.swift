@@ -32,6 +32,7 @@ struct JsonTextEditor: NSViewRepresentable {
         textView.isGrammarCheckingEnabled = false
         textView.isAutomaticLinkDetectionEnabled = false
         textView.isAutomaticDataDetectionEnabled = false
+        textView.setAccessibilityIdentifier("rawJsonEditor")
 
         textView.string = text
         return scrollView

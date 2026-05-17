@@ -64,6 +64,7 @@ struct ContentView: View {
                         Image(systemName: "folder")
                     }
                     .help("Open File")
+                    .accessibilityIdentifier("openFile")
 
                     Button {
                         NSPasteboard.general.clearContents()
@@ -76,6 +77,7 @@ struct ContentView: View {
                         Image(systemName: isCopied ? "doc.on.doc.fill" : "doc.on.doc")
                     }
                     .help("Copy to Clipboard")
+                    .accessibilityIdentifier("copyJson")
                 }
             }
     }

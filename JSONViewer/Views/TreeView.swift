@@ -79,6 +79,7 @@ struct TreeNodeRow: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("expandBtn_\(node.key.isEmpty ? "root" : node.key)")
             } else {
                 Spacer().frame(width: 22)
             }
@@ -163,6 +164,7 @@ struct TreeNodeRow: View {
                 }
                 .buttonStyle(.plain)
                 .opacity(isSelected ? 1 : 0)
+                .accessibilityIdentifier("addChildBtn_\(node.key.isEmpty ? "root" : node.key)")
             }
 
             Spacer().frame(width: 4)

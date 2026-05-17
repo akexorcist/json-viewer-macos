@@ -53,6 +53,7 @@ struct RawJsonView: View {
                 }
                 .buttonStyle(.plain)
                 .help("Format / Prettify JSON")
+                .accessibilityIdentifier("formatJson")
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -78,6 +79,7 @@ struct RawJsonView: View {
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
                 .background(Color(hex: "3a1a1a"))
+                .accessibilityIdentifier("errorBanner")
             }
 
             JsonTextEditor(text: $rawText)

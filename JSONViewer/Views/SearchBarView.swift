@@ -17,6 +17,7 @@ struct SearchBarView: View {
                 .font(.system(size: 12, design: .monospaced))
                 .focused($isFocused)
                 .onSubmit { viewModel.nextMatch() }
+                .accessibilityIdentifier("searchField")
 
             if !viewModel.searchQuery.isEmpty {
                 // Match counter
@@ -25,32 +26,34 @@ struct SearchBarView: View {
                         .font(.system(size: 11))
                         .foregroundColor(.secondary)
                         .fixedSize()
+                        .accessibilityIdentifier("searchMatchCounter")
                 } else {
                     Text("No results")
                         .font(.system(size: 11))
                         .foregroundColor(Color(hex: "f48771"))
                         .fixedSize()
+                        .accessibilityIdentifier("searchNoResults")
                 }
 
                 Divider().frame(height: 14)
 
-                SearchBarButton(systemImage: "chevron.up") { viewModel.previousMatch() }
+                SearchBarButton(systemImage: "chevron.up", identifier: "searchPrevious") { viewModel.previousMatch() }
                     .disabled(viewModel.searchMatches.isEmpty)
 
-                SearchBarButton(systemImage: "chevron.down") { viewModel.nextMatch() }
+                SearchBarButton(systemImage: "chevron.down", identifier: "searchNext") { viewModel.nextMatch() }
                     .disabled(viewModel.searchMatches.isEmpty)
 
                 Divider().frame(height: 14)
 
-                SearchBarButton(systemImage: "xmark.circle.fill") { viewModel.searchQuery = "" }
+                SearchBarButton(systemImage: "xmark.circle.fill", identifier: "searchClear") { viewModel.searchQuery = "" }
             }
 
             Divider().frame(height: 14)
 
-            SearchBarButton(systemImage: "arrow.up.and.line.horizontal.and.arrow.down") { viewModel.expandAll() }
+            SearchBarButton(systemImage: "arrow.up.and.line.horizontal.and.arrow.down", identifier: "expandAll") { viewModel.expandAll() }
                 .help("Expand All")
 
-            SearchBarButton(systemImage: "line.horizontal.3") { viewModel.collapseAll() }
+            SearchBarButton(systemImage: "line.horizontal.3", identifier: "collapseAll") { viewModel.collapseAll() }
                 .help("Collapse All")
         }
         .padding(.horizontal, 10)
@@ -72,6 +75,7 @@ struct SearchBarView: View {
 
 private struct SearchBarButton: View {
     let systemImage: String
+    let identifier: String
     let action: () -> Void
 
     var body: some View {
@@ -83,5 +87,6 @@ private struct SearchBarButton: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier(identifier)
     }
 }

@@ -6,8 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A84BD3152F54589900C5566B /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = A84BD3142F54589900C5566B /* SnapshotTesting */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		A84BD2B12F54589800C5566B /* JSONViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JSONViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A84BD3012F54589900C5566B /* JSONViewerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JSONViewerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A84BD30A2F54589900C5566B /* JSONViewerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JSONViewerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +22,35 @@
 			path = JSONViewer;
 			sourceTree = "<group>";
 		};
+		A84BD3022F54589900C5566B /* JSONViewerTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = JSONViewerTests;
+			sourceTree = "<group>";
+		};
+		A84BD30B2F54589900C5566B /* JSONViewerUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = JSONViewerUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A84BD2AE2F54589800C5566B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A84BD3042F54589900C5566B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A84BD3152F54589900C5566B /* SnapshotTesting in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A84BD30D2F54589900C5566B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +64,8 @@
 			isa = PBXGroup;
 			children = (
 				A84BD2B32F54589800C5566B /* JSONViewer */,
+				A84BD3022F54589900C5566B /* JSONViewerTests */,
+				A84BD30B2F54589900C5566B /* JSONViewerUITests */,
 				A84BD2B22F54589800C5566B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +74,8 @@
 			isa = PBXGroup;
 			children = (
 				A84BD2B12F54589800C5566B /* JSONViewer.app */,
+				A84BD3012F54589900C5566B /* JSONViewerTests.xctest */,
+				A84BD30A2F54589900C5566B /* JSONViewerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +105,51 @@
 			productReference = A84BD2B12F54589800C5566B /* JSONViewer.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A84BD3062F54589900C5566B /* JSONViewerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A84BD3092F54589900C5566B /* Build configuration list for PBXNativeTarget "JSONViewerTests" */;
+			buildPhases = (
+				A84BD3032F54589900C5566B /* Sources */,
+				A84BD3042F54589900C5566B /* Frameworks */,
+				A84BD3052F54589900C5566B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A84BD3022F54589900C5566B /* JSONViewerTests */,
+			);
+			name = JSONViewerTests;
+			packageProductDependencies = (
+				A84BD3142F54589900C5566B /* SnapshotTesting */,
+			);
+			productName = JSONViewerTests;
+			productReference = A84BD3012F54589900C5566B /* JSONViewerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A84BD30F2F54589900C5566B /* JSONViewerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A84BD3122F54589900C5566B /* Build configuration list for PBXNativeTarget "JSONViewerUITests" */;
+			buildPhases = (
+				A84BD30C2F54589900C5566B /* Sources */,
+				A84BD30D2F54589900C5566B /* Frameworks */,
+				A84BD30E2F54589900C5566B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A84BD30B2F54589900C5566B /* JSONViewerUITests */,
+			);
+			name = JSONViewerUITests;
+			packageProductDependencies = (
+			);
+			productName = JSONViewerUITests;
+			productReference = A84BD30A2F54589900C5566B /* JSONViewerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -83,6 +163,14 @@
 					A84BD2B02F54589800C5566B = {
 						CreatedOnToolsVersion = 26.3;
 					};
+					A84BD3062F54589900C5566B = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = A84BD2B02F54589800C5566B;
+					};
+					A84BD30F2F54589900C5566B = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = A84BD2B02F54589800C5566B;
+					};
 				};
 			};
 			buildConfigurationList = A84BD2AC2F54589800C5566B /* Build configuration list for PBXProject "JSONViewer" */;
@@ -94,12 +182,17 @@
 			);
 			mainGroup = A84BD2A82F54589800C5566B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A84BD3132F54589900C5566B /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A84BD2B22F54589800C5566B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				A84BD2B02F54589800C5566B /* JSONViewer */,
+				A84BD3062F54589900C5566B /* JSONViewerTests */,
+				A84BD30F2F54589900C5566B /* JSONViewerUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -112,10 +205,38 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A84BD3052F54589900C5566B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A84BD30E2F54589900C5566B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A84BD2AD2F54589800C5566B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A84BD3032F54589900C5566B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A84BD30C2F54589900C5566B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -341,6 +462,68 @@
 			};
 			name = Release;
 		};
+		A84BD3072F54589900C5566B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QPV3NXTMG2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.akexorcist.jsonviewer.tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JSONViewer.app/Contents/MacOS/JSONViewer";
+			};
+			name = Debug;
+		};
+		A84BD3082F54589900C5566B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QPV3NXTMG2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.akexorcist.jsonviewer.tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JSONViewer.app/Contents/MacOS/JSONViewer";
+			};
+			name = Release;
+		};
+		A84BD3102F54589900C5566B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QPV3NXTMG2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.akexorcist.jsonviewer.uitests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = JSONViewer;
+			};
+			name = Debug;
+		};
+		A84BD3112F54589900C5566B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QPV3NXTMG2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.akexorcist.jsonviewer.uitests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = JSONViewer;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -362,7 +545,45 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A84BD3092F54589900C5566B /* Build configuration list for PBXNativeTarget "JSONViewerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A84BD3072F54589900C5566B /* Debug */,
+				A84BD3082F54589900C5566B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A84BD3122F54589900C5566B /* Build configuration list for PBXNativeTarget "JSONViewerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A84BD3102F54589900C5566B /* Debug */,
+				A84BD3112F54589900C5566B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A84BD3132F54589900C5566B /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = "1.0.0";
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A84BD3142F54589900C5566B /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A84BD3132F54589900C5566B /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+/* End XCSwiftPackageProductDependency section */
+
 	};
 	rootObject = A84BD2A92F54589800C5566B /* Project object */;
 }
