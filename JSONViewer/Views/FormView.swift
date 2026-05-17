@@ -89,18 +89,14 @@ private struct ObjectFormContent: View {
     @State private var keyColumnWidth: CGFloat = 120
 
     var body: some View {
-        List {
-            ForEach(node.children) { child in
-                ObjectPropertyRow(child: child, parentId: node.id, keyColumnWidth: $keyColumnWidth)
-            }
-            .onMove { from, to in
-                if let idx = from.first {
-                    viewModel.reorderChildren(parentId: node.id, fromIndex: idx, toIndex: to > idx ? to - 1 : to)
+        ScrollView(.vertical) {
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(node.children) { child in
+                    ObjectPropertyRow(child: child, parentId: node.id, keyColumnWidth: $keyColumnWidth)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
         .background(Color(hex: "252526"))
     }
 }
@@ -231,6 +227,7 @@ private struct ObjectPropertyRow: View {
                     .foregroundColor(Color(hex: "f48771"))
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("deleteBtn_\(child.key)")
         }
         .padding(.vertical, 4)
         .padding(.horizontal, 8)
@@ -259,18 +256,14 @@ private struct ArrayFormContent: View {
     @EnvironmentObject var viewModel: EditorViewModel
 
     var body: some View {
-        List {
-            ForEach(node.children) { child in
-                ArrayItemRow(child: child, parentId: node.id)
-            }
-            .onMove { from, to in
-                if let idx = from.first {
-                    viewModel.reorderChildren(parentId: node.id, fromIndex: idx, toIndex: to > idx ? to - 1 : to)
+        ScrollView(.vertical) {
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(node.children) { child in
+                    ArrayItemRow(child: child, parentId: node.id)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
         .background(Color(hex: "252526"))
     }
 }
@@ -350,6 +343,7 @@ private struct ArrayItemRow: View {
                     .foregroundColor(Color(hex: "f48771"))
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier("deleteBtn_\(child.key)")
         }
         .padding(.vertical, 4)
         .padding(.horizontal, 8)
