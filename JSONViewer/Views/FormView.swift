@@ -38,6 +38,10 @@ private struct FormHeader: View {
     let node: TreeNode
     @EnvironmentObject var viewModel: EditorViewModel
 
+    @State private var editKey: String = ""
+    @State private var isEditingKey = false
+    @FocusState private var keyFocused: Bool
+
     var body: some View {
         HStack(spacing: 8) {
             // Type badge
@@ -50,11 +54,25 @@ private struct FormHeader: View {
                 .cornerRadius(3)
 
             if !node.key.isEmpty {
-                Text(node.key)
-                    .font(.system(size: 13, weight: .medium, design: .monospaced))
-                    .foregroundColor(Color(hex: "9cdcfe"))
-                    .lineLimit(1)
-                    .textSelection(.enabled)
+                if isEditingKey {
+                    TextField("Key", text: $editKey)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
+                        .focused($keyFocused)
+                        .onSubmit { commitKeyEdit() }
+                        .onExitCommand { isEditingKey = false }
+                } else {
+                    Text(node.key)
+                        .font(.system(size: 13, weight: .medium, design: .monospaced))
+                        .foregroundColor(Color(hex: "9cdcfe"))
+                        .lineLimit(1)
+                        .textSelection(.enabled)
+                        .onTapGesture(count: 2) {
+                            editKey = node.key
+                            isEditingKey = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { keyFocused = true }
+                        }
+                }
             } else {
                 Text("Root")
                     .font(.system(size: 13, weight: .medium))
@@ -78,6 +96,11 @@ private struct FormHeader: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
+    }
+
+    private func commitKeyEdit() {
+        if !editKey.isEmpty { viewModel.setKey(id: node.id, newKey: editKey) }
+        isEditingKey = false
     }
 }
 
