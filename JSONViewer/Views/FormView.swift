@@ -221,6 +221,7 @@ private struct ObjectPropertyRow: View {
             }
             .menuStyle(.borderlessButton)
             .fixedSize()
+            .accessibilityIdentifier("typeMenu_\(child.key)")
 
             // Delete
             Button {
