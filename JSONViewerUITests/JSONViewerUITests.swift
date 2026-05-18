@@ -287,8 +287,10 @@ final class JSONViewerUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["greeting"].waitForExistence(timeout: 3))
         app.staticTexts["greeting"].click()
 
-        // PrimitiveFormContent shows a TextEditor for the string value.
-        let editor = app.textViews["primitiveStringEditor"]
+        // SwiftUI TextEditor applies .accessibilityIdentifier to its NSScrollView wrapper,
+        // not the inner NSTextView that XCUITest queries. Match any textView that is not
+        // the raw JSON editor.
+        let editor = app.textViews.matching(NSPredicate(format: "identifier != 'rawJsonEditor'")).firstMatch
         XCTAssertTrue(editor.waitForExistence(timeout: 2))
         editor.click()
         editor.typeKey("a", modifierFlags: .command)
@@ -344,17 +346,22 @@ final class JSONViewerUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["active"].waitForExistence(timeout: 3))
         app.staticTexts["active"].click()
 
-        // PrimitiveFormContent shows Toggle for boolean type.
-        XCTAssertTrue(app.toggles.firstMatch.waitForExistence(timeout: 2))
+        // On macOS, SwiftUI Toggle renders as NSButton checkbox (not XCUIElementType.toggle).
+        XCTAssertTrue(app.checkBoxes.firstMatch.waitForExistence(timeout: 2))
 
-        // Click "String" segment in the type Picker.
-        let picker = app.segmentedControls["primitiveTypePicker"]
-        XCTAssertTrue(picker.waitForExistence(timeout: 2))
-        picker.buttons["String"].click()
+        // SwiftUI Picker(.segmented) doesn't expose as XCUIElementType.segmentedControl on macOS.
+        // Search all descendants by label to find the "String" segment regardless of element type.
+        let stringSegment = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label == 'String'"))
+            .firstMatch
+        XCTAssertTrue(stringSegment.waitForExistence(timeout: 2))
+        stringSegment.click()
 
-        // After changing to String, TextEditor replaces the Toggle.
-        XCTAssertTrue(app.textViews["primitiveStringEditor"].waitForExistence(timeout: 2))
-        XCTAssertFalse(app.toggles.firstMatch.exists)
+        // After changing to String, checkbox (Toggle) is gone and TextEditor appears.
+        // TextEditor identifier doesn't propagate to the inner NSTextView — match by exclusion.
+        let stringEditor = app.textViews.matching(NSPredicate(format: "identifier != 'rawJsonEditor'")).firstMatch
+        XCTAssertTrue(stringEditor.waitForExistence(timeout: 2))
+        XCTAssertFalse(app.checkBoxes.firstMatch.exists)
     }
 
     // Change a property's value type via the type drop-down Menu in an ObjectFormContent row.
@@ -367,8 +374,10 @@ final class JSONViewerUITests: XCTestCase {
         // String "42" is shown with quotes in the row.
         XCTAssertTrue(app.staticTexts["\"42\""].waitForExistence(timeout: 2))
 
-        // The row's type drop-down is a borderless Menu button labelled with the current type.
-        app.buttons["String"].click()
+        // Menu with .menuStyle(.borderlessButton) renders as MenuButton (not Button/PopUpButton).
+        // It is the only MenuButton in the form panel.
+        XCTAssertTrue(app.menuButtons.firstMatch.waitForExistence(timeout: 2))
+        app.menuButtons.firstMatch.click()
         app.menuItems["Number"].click()
 
         // Number 42 is shown without quotes; string form is gone.
