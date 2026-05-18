@@ -258,6 +258,124 @@ final class JSONViewerUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["newKey"].waitForExistence(timeout: 3))
     }
 
+    // MARK: - Form panel: modify
+
+    // Rename a property key via the inline TextField in ObjectFormContent.
+    func testFormPanelChangeKeyName() {
+        setRawJson(#"{"obj":{"username":"alice"}}"#)
+        XCTAssertTrue(app.buttons["expandBtn_obj"].waitForExistence(timeout: 3))
+        app.staticTexts["obj"].click()
+
+        XCTAssertTrue(app.staticTexts["username"].waitForExistence(timeout: 2))
+        app.staticTexts["username"].doubleClick()
+
+        let keyField = app.textFields["Key"]
+        XCTAssertTrue(keyField.waitForExistence(timeout: 2))
+        keyField.typeKey("a", modifierFlags: .command)
+        keyField.typeText("handle")
+        keyField.typeKey(.return, modifierFlags: [])
+
+        XCTAssertTrue(app.staticTexts["handle"].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.staticTexts["username"].exists)
+    }
+
+    // Edit a string value directly via the TextEditor in PrimitiveFormContent
+    // (the form shown when a primitive leaf node is selected).
+    func testFormPanelChangePrimitiveValue() {
+        setRawJson(#"{"greeting":"hello"}"#)
+        // Root object is auto-expanded; "greeting" is visible in the tree at depth 1.
+        XCTAssertTrue(app.staticTexts["greeting"].waitForExistence(timeout: 3))
+        app.staticTexts["greeting"].click()
+
+        // PrimitiveFormContent shows a TextEditor for the string value.
+        let editor = app.textViews["primitiveStringEditor"]
+        XCTAssertTrue(editor.waitForExistence(timeout: 2))
+        editor.click()
+        editor.typeKey("a", modifierFlags: .command)
+        editor.typeText("goodbye")
+
+        // TextEditor binding updates immediately; verify via tree displayValue.
+        XCTAssertTrue(app.staticTexts["\"goodbye\""].waitForExistence(timeout: 2))
+    }
+
+    // Edit a property value inline via the double-click TextField in ObjectFormContent.
+    func testFormPanelChangeObjectPropertyValue() {
+        setRawJson(#"{"obj":{"price":"99"}}"#)
+        XCTAssertTrue(app.buttons["expandBtn_obj"].waitForExistence(timeout: 3))
+        app.staticTexts["obj"].click()
+
+        XCTAssertTrue(app.staticTexts["\"99\""].waitForExistence(timeout: 2))
+        app.staticTexts["\"99\""].doubleClick()
+
+        let valueField = app.textFields["Value"]
+        XCTAssertTrue(valueField.waitForExistence(timeout: 2))
+        valueField.typeKey("a", modifierFlags: .command)
+        valueField.typeText("199")
+        valueField.typeKey(.return, modifierFlags: [])
+
+        XCTAssertTrue(app.staticTexts["\"199\""].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.staticTexts["\"99\""].exists)
+    }
+
+    // Edit an array item value inline via the double-click TextField in ArrayFormContent.
+    // VStack renders both rows eagerly so both items are accessible regardless of panel height.
+    func testFormPanelChangeArrayItemValue() {
+        setRawJson(#"{"arr":["hello","world"]}"#)
+        XCTAssertTrue(app.buttons["expandBtn_arr"].waitForExistence(timeout: 3))
+        app.staticTexts["arr"].click()
+
+        XCTAssertTrue(app.staticTexts["\"hello\""].waitForExistence(timeout: 2))
+        app.staticTexts["\"hello\""].doubleClick()
+
+        let valueField = app.textFields["Value"]
+        XCTAssertTrue(valueField.waitForExistence(timeout: 2))
+        valueField.typeKey("a", modifierFlags: .command)
+        valueField.typeText("greet")
+        valueField.typeKey(.return, modifierFlags: [])
+
+        XCTAssertTrue(app.staticTexts["\"greet\""].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.staticTexts["\"hello\""].exists)
+    }
+
+    // Change a primitive node's type via the segmented Picker in PrimitiveFormContent.
+    // Boolean → String: Toggle disappears, TextEditor appears.
+    func testFormPanelChangePrimitiveType() {
+        setRawJson(#"{"active":true}"#)
+        XCTAssertTrue(app.staticTexts["active"].waitForExistence(timeout: 3))
+        app.staticTexts["active"].click()
+
+        // PrimitiveFormContent shows Toggle for boolean type.
+        XCTAssertTrue(app.toggles.firstMatch.waitForExistence(timeout: 2))
+
+        // Click "String" segment in the type Picker.
+        let picker = app.segmentedControls["primitiveTypePicker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 2))
+        picker.buttons["String"].click()
+
+        // After changing to String, TextEditor replaces the Toggle.
+        XCTAssertTrue(app.textViews["primitiveStringEditor"].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.toggles.firstMatch.exists)
+    }
+
+    // Change a property's value type via the type drop-down Menu in an ObjectFormContent row.
+    // String "42" → Number 42: displayValue loses the surrounding quotes.
+    func testFormPanelChangeObjectPropertyType() {
+        setRawJson(#"{"obj":{"count":"42"}}"#)
+        XCTAssertTrue(app.buttons["expandBtn_obj"].waitForExistence(timeout: 3))
+        app.staticTexts["obj"].click()
+
+        // String "42" is shown with quotes in the row.
+        XCTAssertTrue(app.staticTexts["\"42\""].waitForExistence(timeout: 2))
+
+        // The row's type drop-down is a borderless Menu button labelled with the current type.
+        app.buttons["String"].click()
+        app.menuItems["Number"].click()
+
+        // Number 42 is shown without quotes; string form is gone.
+        XCTAssertTrue(app.staticTexts["42"].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.staticTexts["\"42\""].exists)
+    }
+
     // Double-clicking a leaf key enters inline edit mode; the value label must remain
     // visible (not pushed off-screen by an expanding TextField). Renaming and confirming
     // with Return replaces the key in the tree.
