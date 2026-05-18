@@ -392,6 +392,7 @@ private struct PrimitiveFormContent: View {
                     }
                 }
                 .pickerStyle(.segmented)
+                .accessibilityIdentifier("primitiveTypePicker")
             }
 
             // Value editor — frame ensures inspector height stays stable across type changes
@@ -434,6 +435,7 @@ private struct PrimitiveFormContent: View {
                     .font(.system(size: 13, design: .monospaced))
                     .frame(minHeight: 80)
                     .border(Color(hex: "3c3c3c"), width: 1)
+                    .accessibilityIdentifier("primitiveStringEditor")
 
                 default:
                     EmptyView()
