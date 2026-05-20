@@ -153,14 +153,28 @@ private struct ObjectPropertyRow: View {
                         .foregroundColor(Color(hex: "9cdcfe"))
                         .lineLimit(1)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .onTapGesture(count: 2) {
-                            editKey = child.key
-                            isEditingKey = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { keyFocused = true }
-                        }
                 }
             }
             .frame(width: keyColumnWidth, alignment: .leading)
+
+            // Edit / confirm key button pair
+            if isEditingKey {
+                Button { commitKey() } label: {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 11))
+                        .foregroundColor(Color(hex: "4ec9b0"))
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("confirmKeyBtn_\(child.key)")
+            } else {
+                Button { startKeyEdit() } label: {
+                    Image(systemName: "pencil")
+                        .font(.system(size: 11))
+                        .foregroundColor(Color(hex: "858585"))
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("editKeyBtn_\(child.key)")
+            }
 
             // Draggable column separator
             Rectangle()
@@ -197,16 +211,30 @@ private struct ObjectPropertyRow: View {
                             .font(.system(size: 13, design: .monospaced))
                             .foregroundColor(child.type.color)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .onTapGesture(count: 2) {
-                                editValue = child.primitive?.editString ?? ""
-                                isEditingValue = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { valueFocused = true }
-                            }
                     }
                 }
                 .padding(.leading, 8)
+
+                // Edit / confirm value button pair
+                if isEditingValue {
+                    Button { commitValue() } label: {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 11))
+                            .foregroundColor(Color(hex: "4ec9b0"))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("confirmValueBtn_\(child.key)")
+                } else {
+                    Button { startValueEdit() } label: {
+                        Image(systemName: "pencil")
+                            .font(.system(size: 11))
+                            .foregroundColor(Color(hex: "858585"))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("editValueBtn_\(child.key)")
+                }
             } else {
-                // Nested container — click to select in tree
+                // Nested container — click to navigate in tree
                 Button {
                     viewModel.selectedId = child.id
                     viewModel.expandedIds.insert(child.id)
@@ -259,16 +287,23 @@ private struct ObjectPropertyRow: View {
         }
         .padding(.vertical, 4)
         .padding(.horizontal, 8)
-        .background(
-            viewModel.selectedId == child.id ? Color(hex: "094771") : Color.clear
-        )
-        .contentShape(Rectangle())
-        .onTapGesture { viewModel.selectedId = child.id }
+    }
+
+    private func startKeyEdit() {
+        editKey = child.key
+        isEditingKey = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { keyFocused = true }
     }
 
     private func commitKey() {
         if !editKey.isEmpty { viewModel.setKey(id: child.id, newKey: editKey) }
         isEditingKey = false
+    }
+
+    private func startValueEdit() {
+        editValue = child.primitive?.editString ?? ""
+        isEditingValue = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { valueFocused = true }
     }
 
     private func commitValue() {
@@ -324,11 +359,25 @@ private struct ArrayItemRow: View {
                         .font(.system(size: 13, design: .monospaced))
                         .foregroundColor(child.type.color)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .onTapGesture(count: 2) {
-                            editValue = child.primitive?.editString ?? ""
-                            isEditingValue = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { valueFocused = true }
-                        }
+                }
+
+                // Edit / confirm value button pair
+                if isEditingValue {
+                    Button { commitValue() } label: {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 11))
+                            .foregroundColor(Color(hex: "4ec9b0"))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("confirmValueBtn_\(child.key)")
+                } else {
+                    Button { startValueEdit() } label: {
+                        Image(systemName: "pencil")
+                            .font(.system(size: 11))
+                            .foregroundColor(Color(hex: "858585"))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("editValueBtn_\(child.key)")
                 }
             } else {
                 Button {
@@ -342,8 +391,6 @@ private struct ArrayItemRow: View {
                 .buttonStyle(.plain)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-
-            Spacer()
 
             Menu {
                 ForEach(NodeType.allCases) { type in
@@ -379,9 +426,12 @@ private struct ArrayItemRow: View {
         }
         .padding(.vertical, 4)
         .padding(.horizontal, 8)
-        .background(viewModel.selectedId == child.id ? Color(hex: "094771") : Color.clear)
-        .contentShape(Rectangle())
-        .onTapGesture { viewModel.selectedId = child.id }
+    }
+
+    private func startValueEdit() {
+        editValue = child.primitive?.editString ?? ""
+        isEditingValue = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { valueFocused = true }
     }
 
     private func commitValue() {

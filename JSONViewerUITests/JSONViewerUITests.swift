@@ -192,43 +192,43 @@ final class JSONViewerUITests: XCTestCase {
         XCTAssertTrue(app.buttons["deleteBtn_0"].exists)
     }
 
-    // Double-clicking a value cell in the form panel opens an inline TextField for editing.
+    // Clicking the pencil button on a value cell opens an inline TextField for editing.
     func testFormPanelEditObjectValue() {
-        setRawJson(#"{"obj":{"name":"Alice"}}"#)
+        setRawJson(#"{"obj":{"name":"Alice","other":"x"}}"#)
 
         let expandBtn = app.buttons["expandBtn_obj"]
         XCTAssertTrue(expandBtn.waitForExistence(timeout: 3))
         app.staticTexts["obj"].click()
 
-        XCTAssertTrue(app.staticTexts["\"Alice\""].waitForExistence(timeout: 2))
-        app.staticTexts["\"Alice\""].doubleClick()
+        XCTAssertTrue(app.buttons["editValueBtn_name"].waitForExistence(timeout: 5))
+        app.buttons["editValueBtn_name"].click()
 
         let valueField = app.textFields["Value"]
         XCTAssertTrue(valueField.waitForExistence(timeout: 2))
         valueField.typeKey("a", modifierFlags: .command)
         valueField.typeText("Bob")
-        valueField.typeKey(.return, modifierFlags: [])
+        app.buttons["confirmValueBtn_name"].click()
 
         XCTAssertTrue(app.staticTexts["\"Bob\""].waitForExistence(timeout: 2))
         XCTAssertFalse(app.staticTexts["\"Alice\""].exists)
     }
 
-    // Double-clicking a key cell in the form panel opens an inline TextField for editing.
+    // Clicking the pencil button on a key cell opens an inline TextField for editing.
     func testFormPanelEditObjectKey() {
-        setRawJson(#"{"obj":{"name":"Alice"}}"#)
+        setRawJson(#"{"obj":{"name":"Alice","other":"x"}}"#)
 
         let expandBtn = app.buttons["expandBtn_obj"]
         XCTAssertTrue(expandBtn.waitForExistence(timeout: 3))
         app.staticTexts["obj"].click()
 
-        XCTAssertTrue(app.staticTexts["name"].waitForExistence(timeout: 2))
-        app.staticTexts["name"].doubleClick()
+        XCTAssertTrue(app.buttons["editKeyBtn_name"].waitForExistence(timeout: 5))
+        app.buttons["editKeyBtn_name"].click()
 
         let keyField = app.textFields["Key"]
         XCTAssertTrue(keyField.waitForExistence(timeout: 2))
         keyField.typeKey("a", modifierFlags: .command)
         keyField.typeText("label")
-        keyField.typeKey(.return, modifierFlags: [])
+        app.buttons["confirmKeyBtn_name"].click()
 
         XCTAssertTrue(app.staticTexts["label"].waitForExistence(timeout: 2))
         XCTAssertFalse(app.staticTexts["name"].exists)
@@ -260,20 +260,20 @@ final class JSONViewerUITests: XCTestCase {
 
     // MARK: - Form panel: modify
 
-    // Rename a property key via the inline TextField in ObjectFormContent.
+    // Rename a property key via the pencil button in ObjectFormContent.
     func testFormPanelChangeKeyName() {
-        setRawJson(#"{"obj":{"username":"alice"}}"#)
+        setRawJson(#"{"obj":{"username":"alice","other":"x"}}"#)
         XCTAssertTrue(app.buttons["expandBtn_obj"].waitForExistence(timeout: 3))
         app.staticTexts["obj"].click()
 
-        XCTAssertTrue(app.staticTexts["username"].waitForExistence(timeout: 2))
-        app.staticTexts["username"].doubleClick()
+        XCTAssertTrue(app.buttons["editKeyBtn_username"].waitForExistence(timeout: 5))
+        app.buttons["editKeyBtn_username"].click()
 
         let keyField = app.textFields["Key"]
         XCTAssertTrue(keyField.waitForExistence(timeout: 2))
         keyField.typeKey("a", modifierFlags: .command)
         keyField.typeText("handle")
-        keyField.typeKey(.return, modifierFlags: [])
+        app.buttons["confirmKeyBtn_username"].click()
 
         XCTAssertTrue(app.staticTexts["handle"].waitForExistence(timeout: 2))
         XCTAssertFalse(app.staticTexts["username"].exists)
@@ -300,40 +300,40 @@ final class JSONViewerUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["\"goodbye\""].waitForExistence(timeout: 2))
     }
 
-    // Edit a property value inline via the double-click TextField in ObjectFormContent.
+    // Edit a property value via the pencil button in ObjectFormContent.
     func testFormPanelChangeObjectPropertyValue() {
-        setRawJson(#"{"obj":{"price":"99"}}"#)
+        setRawJson(#"{"obj":{"price":"99","other":"x"}}"#)
         XCTAssertTrue(app.buttons["expandBtn_obj"].waitForExistence(timeout: 3))
         app.staticTexts["obj"].click()
 
-        XCTAssertTrue(app.staticTexts["\"99\""].waitForExistence(timeout: 2))
-        app.staticTexts["\"99\""].doubleClick()
+        XCTAssertTrue(app.buttons["editValueBtn_price"].waitForExistence(timeout: 5))
+        app.buttons["editValueBtn_price"].click()
 
         let valueField = app.textFields["Value"]
         XCTAssertTrue(valueField.waitForExistence(timeout: 2))
         valueField.typeKey("a", modifierFlags: .command)
         valueField.typeText("199")
-        valueField.typeKey(.return, modifierFlags: [])
+        app.buttons["confirmValueBtn_price"].click()
 
         XCTAssertTrue(app.staticTexts["\"199\""].waitForExistence(timeout: 2))
         XCTAssertFalse(app.staticTexts["\"99\""].exists)
     }
 
-    // Edit an array item value inline via the double-click TextField in ArrayFormContent.
+    // Edit an array item value via the pencil button in ArrayFormContent.
     // VStack renders both rows eagerly so both items are accessible regardless of panel height.
     func testFormPanelChangeArrayItemValue() {
         setRawJson(#"{"arr":["hello","world"]}"#)
         XCTAssertTrue(app.buttons["expandBtn_arr"].waitForExistence(timeout: 3))
         app.staticTexts["arr"].click()
 
-        XCTAssertTrue(app.staticTexts["\"hello\""].waitForExistence(timeout: 2))
-        app.staticTexts["\"hello\""].doubleClick()
+        XCTAssertTrue(app.buttons["editValueBtn_0"].waitForExistence(timeout: 5))
+        app.buttons["editValueBtn_0"].click()
 
         let valueField = app.textFields["Value"]
         XCTAssertTrue(valueField.waitForExistence(timeout: 2))
         valueField.typeKey("a", modifierFlags: .command)
         valueField.typeText("greet")
-        valueField.typeKey(.return, modifierFlags: [])
+        app.buttons["confirmValueBtn_0"].click()
 
         XCTAssertTrue(app.staticTexts["\"greet\""].waitForExistence(timeout: 2))
         XCTAssertFalse(app.staticTexts["\"hello\""].exists)
